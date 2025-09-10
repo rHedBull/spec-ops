@@ -36,8 +36,8 @@
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Performance Goals**: [Default: development-friendly, or specify if performance requirements mentioned, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Security Requirements**: [Default: basic development security, or specify if security/privacy mentioned, e.g., GDPR, encryption, audit trails or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ### Tech Stack & Infrastructure
@@ -46,7 +46,7 @@
 **Mobile Framework**: [e.g., React Native, Flutter, Native iOS/Android, or N/A or NEEDS CLARIFICATION]  
 **API Style**: [REST, GraphQL, gRPC, WebSocket, or NEEDS CLARIFICATION]  
 **Authentication**: [JWT, OAuth2, Session-based, Firebase Auth, or NEEDS CLARIFICATION]  
-**Deployment**: [Docker, Kubernetes, Serverless, Cloud provider specifics or NEEDS CLARIFICATION]
+**Deployment**: [Default: local development setup, or specify if production/cloud requirements or NEEDS CLARIFICATION]
 
 ### Database & Storage
 **Primary Database**: [PostgreSQL, MySQL, MongoDB, SQLite, or NEEDS CLARIFICATION]  
@@ -61,6 +61,15 @@
 **Integration Testing**: [Testcontainers, database fixtures, API testing or NEEDS CLARIFICATION]  
 **E2E Testing**: [Playwright, Cypress, Selenium, or none or NEEDS CLARIFICATION]  
 **Performance Testing**: [load testing tools, benchmarking approach or NEEDS CLARIFICATION]
+
+### State Management & Object Lifecycle
+**State Machines**: [entities requiring state management, e.g., Order, User, Payment or NEEDS CLARIFICATION]  
+**State Persistence**: [how state is stored and retrieved, database fields, event sourcing or NEEDS CLARIFICATION]  
+**State Transitions**: [what triggers state changes, validation rules, business logic or NEEDS CLARIFICATION]  
+**Concurrency Control**: [optimistic/pessimistic locking, versioning, conflict resolution or NEEDS CLARIFICATION]  
+**Object Lifecycle**: [creation, initialization, active states, cleanup, destruction or NEEDS CLARIFICATION]  
+**Event Handling**: [domain events, state change notifications, event sourcing patterns or NEEDS CLARIFICATION]  
+**Temporal Concerns**: [time-based state changes, scheduling, expiration, timeouts or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
@@ -100,18 +109,16 @@
 ### Documentation (this feature)
 ```
 specs/[###-feature]/
-├── plan.md                  # This file (/plan command output)
-├── research.md              # Phase 0 output (/plan command)
-├── services-architecture.md # Phase 1 output (/plan command)
-├── data-model.md            # Phase 1 output (/plan command)
-├── system-design.md         # Phase 1 output (/plan command)
-├── project-structure.md     # Phase 1 output (/plan command)
-├── quickstart.md            # Phase 1 output (/plan command)
-├── contracts/               # Phase 1 output (/plan command)
-│   ├── api-spec.yaml       # OpenAPI/GraphQL schemas
-│   ├── service-interfaces/ # Service contract definitions
+├── plan.md              # This file (/plan command output)
+├── research.md          # Phase 0 output (/plan command)
+├── architecture.md      # Phase 1: Services, structure, integration (/plan command)
+├── data-design.md       # Phase 1: Models, state, persistence, lifecycle (/plan command)
+├── deployment.md        # Phase 1: Deployment, security*, performance* (/plan command)
+├── quickstart.md        # Phase 1 output (/plan command)
+├── contracts/           # Phase 1 output (/plan command)
+│   ├── api-spec.yaml   # OpenAPI/GraphQL schemas
 │   └── database-schema.sql # Database DDL and constraints
-└── tasks.md                 # Phase 2 output (/tasks command - NOT created by /plan)
+└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
 ```
 
 ### Source Code (repository root)
@@ -192,7 +199,15 @@ ios/ or android/
    - Plan dependency injection and testing strategies
    - Research error handling and exception design patterns
 
-6. **Consolidate findings** in `research.md` using format:
+6. **State Management & Lifecycle Research**:
+   - Identify entities requiring state machines from functional requirements
+   - Research state machine patterns for identified entities
+   - Evaluate object lifecycle management strategies
+   - Investigate concurrency control and locking mechanisms
+   - Research event-driven architecture patterns if applicable
+   - Plan temporal state management (timeouts, scheduling, expiration)
+
+7. **Consolidate findings** in `research.md` using format:
    - Decision: [what was chosen]
    - Rationale: [why chosen]
    - Alternatives considered: [what else evaluated]
@@ -203,53 +218,73 @@ ios/ or android/
 ## Phase 1: Design & Contracts
 *Prerequisites: research.md complete*
 
-1. **Service Architecture Design** → `services-architecture.md`:
-   - Identify core services from functional requirements
-   - Define service boundaries and responsibilities
-   - Map service-to-service communication patterns
-   - Define shared vs service-specific data stores
-   - Document service deployment and scaling strategies
+1. **System Architecture** → `architecture.md`:
+   - **Service Design**: Core services, boundaries, communication patterns
+   - **Project Structure**: Directory organization, module separation
+   - **Integration Patterns**: How services/components connect
+   - **Technology Integration**: Framework usage, dependency patterns
 
-2. **Database Design** → `data-model.md`:
-   - Design database schema with tables, indexes, constraints
-   - Define entity relationships (1:1, 1:Many, Many:Many)
-   - Plan data migration and seeding strategies
-   - Consider read replicas, sharding if needed for scale
-   - Document backup and disaster recovery approach
+2. **Data & State Design** → `data-design.md`:
+   - **Database Schema**: Tables, indexes, constraints, relationships
+   - **Entity Modeling**: Core domain objects and their properties
+   - **State Machines**: Which entities have state, valid transitions, business rules
+   - **Object Lifecycle**: Creation, initialization, state changes, cleanup, destruction
+   - **Concurrency & Locking**: Version control, optimistic/pessimistic locking
+   - **Event Patterns**: State change events, domain events, event sourcing
+   - **Temporal Concerns**: Time-based state changes, expiration, scheduling
+   - **Class Design**: Interfaces, inheritance, composition for data/state management
+   - **Persistence Patterns**: How objects are saved, loaded, cached
 
-3. **Interface & Class Design** → `system-design.md`:
-   - Define core interfaces and abstract classes
-   - Plan inheritance hierarchies and composition patterns
-   - Design dependency injection containers and patterns
-   - Define error handling and exception hierarchies
-   - Document design patterns used (Factory, Strategy, Observer, etc.)
+3. **Deployment & Operations** → `deployment.md`:
+   - **Default Strategy**: Simple local development setup
+     * Local database (SQLite, local PostgreSQL, etc.)
+     * Direct application execution (no containers by default)
+     * File-based configuration
+     * Development-friendly defaults
+   - **Conditional Sections** (only if explicitly mentioned in requirements):
+     * **Security & Privacy** (if security/privacy requirements specified):
+       - Authentication and authorization strategies
+       - Data encryption and protection
+       - Privacy compliance (GDPR, CCPA, etc.)
+       - Security headers and protections
+       - Audit logging and monitoring
+     * **Performance & Scaling** (if performance requirements specified):
+       - Load balancing and scaling strategies
+       - Caching layers and optimization
+       - Database performance tuning
+       - Monitoring and alerting
+       - Performance testing approaches
+     * **Production Deployment** (if production requirements specified):
+       - Container/cloud deployment strategies
+       - Infrastructure as code
+       - CI/CD pipeline design
+       - Environment management
+       - Backup and disaster recovery
 
 4. **API Contracts Design** → `/contracts/`:
    - For each user action → endpoint specification
    - Define request/response schemas with validation rules
+   - **State-Related APIs**:
+     * Design state query endpoints (current state, history)
+     * Define state transition endpoints with validation
+     * Plan bulk state operation APIs if needed
+     * Design state event subscription APIs
    - Plan API versioning strategy and backward compatibility
    - Design authentication and authorization per endpoint
    - Output OpenAPI/GraphQL schema files
 
-5. **Directory Structure Planning** → `project-structure.md`:
-   - Define package/module organization
-   - Plan separation of concerns (models, services, controllers, utils)
-   - Design test directory mirroring source structure
-   - Plan configuration and environment file organization
-   - Define build and deployment artifact structure
-
-6. **Generate contract tests** from contracts:
+5. **Generate contract tests** from contracts:
    - One test file per endpoint/service interface
    - Assert request/response schemas and business rules
    - Tests must fail (no implementation yet)
    - Include database integration test scaffolding
 
-7. **Extract test scenarios** from user stories:
+6. **Extract test scenarios** from user stories:
    - Each story → integration test scenario
    - Quickstart test = story validation steps
    - Include service interaction tests
 
-8. **Update agent file incrementally** (O(1) operation):
+7. **Update agent file incrementally** (O(1) operation):
    - Run `/scripts/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
@@ -257,7 +292,7 @@ ios/ or android/
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: services-architecture.md, data-model.md, system-design.md, project-structure.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**Output**: architecture.md, data-design.md, deployment.md, /contracts/*, failing tests, quickstart.md, agent-specific file
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*

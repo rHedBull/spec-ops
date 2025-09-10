@@ -29,7 +29,7 @@ Given the implementation details provided as an argument, do this:
    - Follow error handling and gate checks as specified
    - Let the template guide artifact generation in $SPECS_DIR:
      * Phase 0 generates research.md
-     * Phase 1 generates services-architecture.md, data-model.md, system-design.md, project-structure.md, contracts/, quickstart.md
+     * Phase 1 generates architecture.md, data-design.md, deployment.md, contracts/, quickstart.md
      * Phase 2 generates tasks.md
    - Incorporate user-provided details from arguments into Technical Context: {ARGS}
    - Update Progress Tracking as you complete each phase
