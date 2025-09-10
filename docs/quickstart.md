@@ -1,15 +1,15 @@
 # Quick Start Guide
 
-This guide will help you get started with Spec-Driven Development using Spec Kit.
+This guide will help you get started with Spec-Driven Development using Spec Ops.
 
 ## The 4-Step Process
 
-### 1. Install Specify
+### 1. Install Spec Ops
 
 Initialize your project depending on the coding agent you're using:
 
 ```bash
-uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
+uvx --from git+https://github.com/your-username/spec-ops.git specops init <PROJECT_NAME>
 ```
 
 ### 2. Create the Spec

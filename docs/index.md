@@ -1,4 +1,4 @@
-# Spec Kit
+# Spec Ops
 
 *Build high-quality software faster.*
 

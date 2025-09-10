@@ -10,16 +10,16 @@
 # ]
 # ///
 """
-Specify CLI - Setup tool for Specify projects
+Spec Ops CLI - Setup tool for Spec Ops projects
 
 Usage:
-    uvx specify-cli.py init <project-name>
-    uvx specify-cli.py init --here
+    uvx --from git+https://github.com/your-repo/spec-ops.git specops init <project-name>
+    uvx --from git+https://github.com/your-repo/spec-ops.git specops init --here
 
 Or install globally:
-    uv tool install --from specify-cli.py specify-cli
-    specify init <project-name>
-    specify init --here
+    uv tool install --from git+https://github.com/your-repo/spec-ops.git spec-ops-cli
+    specops init <project-name>
+    specops init --here
 """
 
 import os
@@ -56,12 +56,12 @@ AI_CHOICES = {
 
 # ASCII Art Banner
 BANNER = """
-███████╗██████╗ ███████╗ ██████╗██╗███████╗██╗   ██╗
-██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔════╝╚██╗ ██╔╝
-███████╗██████╔╝█████╗  ██║     ██║█████╗   ╚████╔╝ 
-╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══╝    ╚██╔╝  
-███████║██║     ███████╗╚██████╗██║██║        ██║   
-╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝        ╚═╝   
+███████╗██████╗ ███████╗ ██████╗     ██████╗ ██████╗ ███████╗
+██╔════╝██╔══██╗██╔════╝██╔════╝    ██╔═══██╗██╔══██╗██╔════╝
+███████╗██████╔╝█████╗  ██║         ██║   ██║██████╔╝███████╗
+╚════██║██╔═══╝ ██╔══╝  ██║         ██║   ██║██╔═══╝ ╚════██║
+███████║██║     ███████╗╚██████╗    ╚██████╔╝██║     ███████║
+╚══════╝╚═╝     ╚══════╝ ╚═════╝     ╚═════╝ ╚═╝     ╚══════╝
 """
 
 TAGLINE = "Spec-Driven Development Toolkit"
@@ -276,8 +276,8 @@ class BannerGroup(TyperGroup):
 
 
 app = typer.Typer(
-    name="specify",
-    help="Setup tool for Specify spec-driven development projects",
+    name="specops",
+    help="Setup tool for Spec Ops spec-driven development projects",
     add_completion=False,
     invoke_without_command=True,
     cls=BannerGroup,
@@ -307,7 +307,7 @@ def callback(ctx: typer.Context):
     # (help is handled by BannerGroup)
     if ctx.invoked_subcommand is None and "--help" not in sys.argv and "-h" not in sys.argv:
         show_banner()
-        console.print(Align.center("[dim]Run 'specify --help' for usage information[/dim]"))
+        console.print(Align.center("[dim]Run 'specops --help' for usage information[/dim]"))
         console.print()
 
 
@@ -372,7 +372,7 @@ def init_git_repo(project_path: Path, quiet: bool = False) -> bool:
             console.print("[cyan]Initializing git repository...[/cyan]")
         subprocess.run(["git", "init"], check=True, capture_output=True)
         subprocess.run(["git", "add", "."], check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", "Initial commit from Specify template"], check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "Initial commit from Spec Ops template"], check=True, capture_output=True)
         if not quiet:
             console.print("[green]✓[/green] Git repository initialized")
         return True
@@ -644,7 +644,7 @@ def init(
     here: bool = typer.Option(False, "--here", help="Initialize project in the current directory instead of creating a new one"),
 ):
     """
-    Initialize a new Specify project from the latest template.
+    Initialize a new Spec Ops project from the latest template.
     
     This command will:
     1. Check that required tools are installed (git is optional)
@@ -655,13 +655,13 @@ def init(
     6. Optionally set up AI assistant commands
     
     Examples:
-        specify init my-project
-        specify init my-project --ai claude
-        specify init my-project --ai gemini
-        specify init my-project --ai copilot --no-git
-        specify init --ignore-agent-tools my-project
-        specify init --here --ai claude
-        specify init --here
+        specops init my-project
+        specops init my-project --ai claude
+        specops init my-project --ai gemini
+        specops init my-project --ai copilot --no-git
+        specops init --ignore-agent-tools my-project
+        specops init --here --ai claude
+        specops init --here
     """
     # Show banner first
     show_banner()
@@ -699,7 +699,7 @@ def init(
             raise typer.Exit(1)
     
     console.print(Panel.fit(
-        "[bold cyan]Specify Project Setup[/bold cyan]\n"
+        "[bold cyan]Spec Ops Project Setup[/bold cyan]\n"
         f"{'Initializing in current directory:' if here else 'Creating new project:'} [green]{project_path.name}[/green]"
         + (f"\n[dim]Path: {project_path}[/dim]" if here else ""),
         border_style="cyan"
@@ -746,7 +746,7 @@ def init(
     
     # Download and set up project
     # New tree-based progress (no emojis); include earlier substeps
-    tracker = StepTracker("Initialize Specify Project")
+    tracker = StepTracker("Initialize Spec Ops Project")
     # Flag to allow suppressing legacy headings
     sys._specify_tracker_active = True
     # Pre steps recorded as completed before live rendering
@@ -838,7 +838,7 @@ def init(
 def check():
     """Check that all required tools are installed."""
     show_banner()
-    console.print("[bold]Checking Specify requirements...[/bold]\n")
+    console.print("[bold]Checking Spec Ops requirements...[/bold]\n")
     
     # Check if we have internet connectivity by trying to reach GitHub API
     console.print("[cyan]Checking internet connectivity...[/cyan]")
@@ -856,7 +856,7 @@ def check():
     claude_ok = check_tool("claude", "Install from: https://docs.anthropic.com/en/docs/claude-code/setup")
     gemini_ok = check_tool("gemini", "Install from: https://github.com/google-gemini/gemini-cli")
     
-    console.print("\n[green]✓ Specify CLI is ready to use![/green]")
+    console.print("\n[green]✓ Spec Ops CLI is ready to use![/green]")
     if not git_ok:
         console.print("[yellow]Consider installing git for repository management[/yellow]")
     if not (claude_ok or gemini_ok):

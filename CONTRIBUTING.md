@@ -1,6 +1,6 @@
-## Contributing to Spec Kit
+## Contributing to Spec Ops
 
-Hi there! We're thrilled that you'd like to contribute to Spec Kit. Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+Hi there! We're thrilled that you'd like to contribute to Spec Ops. Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
@@ -17,7 +17,7 @@ These are one time installations required to be able to test your changes locall
 
 1. Fork and clone the repository
 1. Configure and install the dependencies: `uv sync`
-1. Make sure the CLI works on your machine: `uv run specify --help`
+1. Make sure the CLI works on your machine: `uv run specops --help`
 1. Create a new branch: `git checkout -b my-branch-name`
 1. Make your change, add tests, and make sure everything still works
 1. Test the CLI functionality with a sample project if relevant
