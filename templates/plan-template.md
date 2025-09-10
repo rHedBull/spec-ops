@@ -106,20 +106,28 @@
 
 ## Project Structure
 
-### Documentation (this feature)
+### MANDATORY Documentation Structure (this feature)
 ```
 specs/[###-feature]/
 ├── plan.md              # This file (/plan command output)
 ├── research.md          # Phase 0 output (/plan command)
-├── architecture.md      # Phase 1: Services, structure, integration (/plan command)
-├── data-design.md       # Phase 1: Models, state, persistence, lifecycle (/plan command)
-├── deployment.md        # Phase 1: Deployment, security*, performance* (/plan command)
+├── architecture.md      # Phase 1: MANDATORY - Services, structure, integration (/plan command)
+├── data-design.md       # Phase 1: MANDATORY - Models, state, persistence, lifecycle (/plan command)
+├── deployment.md        # Phase 1: MANDATORY - Deployment, security*, performance* (/plan command)
 ├── quickstart.md        # Phase 1 output (/plan command)
 ├── contracts/           # Phase 1 output (/plan command)
 │   ├── api-spec.yaml   # OpenAPI/GraphQL schemas
 │   └── database-schema.sql # Database DDL and constraints
 └── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
 ```
+
+**CRITICAL**: You MUST create files with these EXACT names. Do NOT use old names like:
+- ❌ data-model.md (OLD - DO NOT USE)
+- ❌ system-design.md (OLD - DO NOT USE)  
+- ❌ services-architecture.md (OLD - DO NOT USE)
+- ✅ architecture.md (CORRECT)
+- ✅ data-design.md (CORRECT)
+- ✅ deployment.md (CORRECT)
 
 ### Source Code (repository root)
 ```
@@ -218,13 +226,13 @@ ios/ or android/
 ## Phase 1: Design & Contracts
 *Prerequisites: research.md complete*
 
-1. **System Architecture** → `architecture.md`:
+1. **MANDATORY: System Architecture** → `architecture.md` (EXACT FILENAME):
    - **Service Design**: Core services, boundaries, communication patterns
    - **Project Structure**: Directory organization, module separation
    - **Integration Patterns**: How services/components connect
    - **Technology Integration**: Framework usage, dependency patterns
 
-2. **Data & State Design** → `data-design.md`:
+2. **MANDATORY: Data & State Design** → `data-design.md` (EXACT FILENAME):
    - **Database Schema**: Tables, indexes, constraints, relationships
    - **Entity Modeling**: Core domain objects and their properties
    - **State Machines**: Which entities have state, valid transitions, business rules
@@ -235,7 +243,7 @@ ios/ or android/
    - **Class Design**: Interfaces, inheritance, composition for data/state management
    - **Persistence Patterns**: How objects are saved, loaded, cached
 
-3. **Deployment & Operations** → `deployment.md`:
+3. **MANDATORY: Deployment & Operations** → `deployment.md` (EXACT FILENAME):
    - **Default Strategy**: Simple local development setup
      * Local database (SQLite, local PostgreSQL, etc.)
      * Direct application execution (no containers by default)
@@ -292,7 +300,13 @@ ios/ or android/
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: architecture.md, data-design.md, deployment.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**REQUIRED Output**: 
+- architecture.md (NOT services-architecture.md)
+- data-design.md (NOT data-model.md) 
+- deployment.md (NEW FILE)
+- /contracts/*, failing tests, quickstart.md, agent-specific file
+
+**IMPORTANT**: You MUST create these exact filenames. Do not use old naming like data-model.md or system-design.md.
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
