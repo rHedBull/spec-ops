@@ -15,6 +15,9 @@ Given the implementation details provided as an argument, do this:
    - Functional and non-functional requirements
    - Success criteria and acceptance criteria
    - Any technical constraints or dependencies mentioned
+   - Service boundaries and architecture implications
+   - Data storage and persistence requirements
+   - Interface and integration points
 
 3. Read the constitution at `/memory/constitution.md` to understand constitutional requirements.
 
@@ -26,7 +29,7 @@ Given the implementation details provided as an argument, do this:
    - Follow error handling and gate checks as specified
    - Let the template guide artifact generation in $SPECS_DIR:
      * Phase 0 generates research.md
-     * Phase 1 generates data-model.md, contracts/, quickstart.md
+     * Phase 1 generates services-architecture.md, data-model.md, system-design.md, project-structure.md, contracts/, quickstart.md
      * Phase 2 generates tasks.md
    - Incorporate user-provided details from arguments into Technical Context: {ARGS}
    - Update Progress Tracking as you complete each phase
