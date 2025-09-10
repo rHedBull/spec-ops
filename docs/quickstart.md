@@ -9,7 +9,7 @@ This guide will help you get started with Spec-Driven Development using Spec Ops
 Initialize your project depending on the coding agent you're using:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <PROJECT_NAME>
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <PROJECT_NAME>
 ```
 
 ### 2. Create the Spec

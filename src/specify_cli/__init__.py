@@ -13,11 +13,11 @@
 Spec Ops CLI - Setup tool for Spec Ops projects
 
 Usage:
-    uvx --from git+https://github.com/your-repo/spec-ops.git specops init <project-name>
-    uvx --from git+https://github.com/your-repo/spec-ops.git specops init --here
+    uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project-name>
+    uvx --from git+https://github.com/rHedBull/spec-ops.git specops init --here
 
 Or install globally:
-    uv tool install --from git+https://github.com/your-repo/spec-ops.git spec-ops-cli
+    uv tool install --from git+https://github.com/rHedBull/spec-ops.git spec-ops-cli
     specops init <project-name>
     specops init --here
 """

@@ -62,7 +62,7 @@
       "_enableSearch": true,
       "_disableContribution": false,
       "_gitContribute": {
-        "repo": "https://github.com/your-username/spec-ops",
+        "repo": "https://github.com/rHedBull/spec-ops",
         "branch": "main"
       }
     }

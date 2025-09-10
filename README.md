@@ -8,7 +8,7 @@
     <strong>An effort to allow organizations to focus on product scenarios rather than writing undifferentiated code with the help of Spec-Driven Development.</strong>
 </p>
 
-[![Release](https://github.com/your-username/spec-ops/actions/workflows/release.yml/badge.svg)](https://github.com/your-username/spec-ops/actions/workflows/release.yml)
+[![Release](https://github.com/rHedBull/spec-ops/actions/workflows/release.yml/badge.svg)](https://github.com/rHedBull/spec-ops/actions/workflows/release.yml)
 
 ---
 
@@ -39,7 +39,7 @@ Spec-Driven Development **flips the script** on traditional software development
 Initialize your project depending on the coding agent you're using:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <PROJECT_NAME>
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <PROJECT_NAME>
 ```
 
 ### 2. Create the spec
@@ -130,13 +130,13 @@ Our research and experimentation focus on:
 You can use the Spec Ops CLI to bootstrap your project, which will bring in the required artifacts in your environment. Run:
 
 ```bash
-specops init <project_name>
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name>
 ```
 
 Or initialize in the current directory:
 
 ```bash
-specops init --here
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init --here
 ```
 
 ![Specify CLI bootstrapping a new project in the terminal](./media/specify_cli.gif)
@@ -144,17 +144,17 @@ specops init --here
 You will be prompted to select the AI agent you are using. You can also proactively specify it directly in the terminal:
 
 ```bash
-specops init <project_name> --ai claude
-specops init <project_name> --ai gemini
-specops init <project_name> --ai copilot
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai claude
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai gemini
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai copilot
 # Or in current directory:
-specops init --here --ai claude
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init --here --ai claude
 ```
 
 The CLI will check if you have Claude Code or Gemini CLI installed. If you do not, or you prefer to get the templates without checking for the right tools, use `--ignore-agent-tools` with your command:
 
 ```bash
-specops init <project_name> --ai claude --ignore-agent-tools
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai claude --ignore-agent-tools
 ```
 
 ### **STEP 1:** Bootstrap the project
@@ -371,7 +371,7 @@ rm gcm-linux_amd64.2.6.1.deb
 
 ## 💬 Support
 
-For support, please open a [GitHub issue](https://github.com/your-username/spec-ops/issues/new). We welcome bug reports, feature requests, and questions about using Spec-Driven Development.
+For support, please open a [GitHub issue](https://github.com/rHedBull/spec-ops/issues/new). We welcome bug reports, feature requests, and questions about using Spec-Driven Development.
 
 ## 🙏 Acknowledgements
 

@@ -15,13 +15,13 @@
 The easiest way to get started is to initialize a new project:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <PROJECT_NAME>
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <PROJECT_NAME>
 ```
 
 Or initialize in the current directory:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init --here
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init --here
 ```
 
 ### Specify AI Agent
@@ -29,9 +29,9 @@ uvx --from git+https://github.com/your-username/spec-ops.git specops init --here
 You can proactively specify your AI agent during initialization:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <project_name> --ai claude
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <project_name> --ai gemini
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <project_name> --ai copilot
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai claude
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai gemini
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai copilot
 ```
 
 ### Ignore Agent Tools Check
@@ -39,7 +39,7 @@ uvx --from git+https://github.com/your-username/spec-ops.git specops init <proje
 If you prefer to get the templates without checking for the right tools:
 
 ```bash
-uvx --from git+https://github.com/your-username/spec-ops.git specops init <project_name> --ai claude --ignore-agent-tools
+uvx --from git+https://github.com/rHedBull/spec-ops.git specops init <project_name> --ai claude --ignore-agent-tools
 ```
 
 ## Verification
