@@ -385,256 +385,124 @@ def init_git_repo(project_path: Path, quiet: bool = False) -> bool:
         os.chdir(original_cwd)
 
 
-def download_template_from_github(ai_assistant: str, download_dir: Path, *, verbose: bool = True, show_progress: bool = True):
-    """Download the latest template release from GitHub using HTTP requests.
-    Returns (zip_path, metadata_dict)
-    """
-    repo_owner = "github"
-    repo_name = "spec-kit"
+def copy_local_templates(source_dir: Path, project_path: Path, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None):
+    """Copy templates from local directory to project directory."""
     
-    if verbose:
-        console.print("[cyan]Fetching latest release information...[/cyan]")
-    api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+    # Define which directories and files to copy
+    items_to_copy = ["templates", "scripts", "memory"]
+    
+    if tracker:
+        tracker.start("extract")
     
     try:
-        response = httpx.get(api_url, timeout=30, follow_redirects=True)
-        response.raise_for_status()
-        release_data = response.json()
-    except httpx.RequestError as e:
-        if verbose:
-            console.print(f"[red]Error fetching release information:[/red] {e}")
-        raise typer.Exit(1)
-    
-    # Find the template asset for the specified AI assistant
-    pattern = f"spec-kit-template-{ai_assistant}"
-    matching_assets = [
-        asset for asset in release_data.get("assets", [])
-        if pattern in asset["name"] and asset["name"].endswith(".zip")
-    ]
-    
-    if not matching_assets:
-        if verbose:
-            console.print(f"[red]Error:[/red] No template found for AI assistant '{ai_assistant}'")
-            console.print(f"[yellow]Available assets:[/yellow]")
-            for asset in release_data.get("assets", []):
-                console.print(f"  - {asset['name']}")
-        raise typer.Exit(1)
-    
-    # Use the first matching asset
-    asset = matching_assets[0]
-    download_url = asset["browser_download_url"]
-    filename = asset["name"]
-    file_size = asset["size"]
-    
-    if verbose:
-        console.print(f"[cyan]Found template:[/cyan] {filename}")
-        console.print(f"[cyan]Size:[/cyan] {file_size:,} bytes")
-        console.print(f"[cyan]Release:[/cyan] {release_data['tag_name']}")
-    
-    # Download the file
-    zip_path = download_dir / filename
-    if verbose:
-        console.print(f"[cyan]Downloading template...[/cyan]")
-    
-    try:
-        with httpx.stream("GET", download_url, timeout=30, follow_redirects=True) as response:
-            response.raise_for_status()
-            total_size = int(response.headers.get('content-length', 0))
+        if verbose and not tracker:
+            console.print(f"[dim]Template source directory: {source_dir}[/dim]")
+            console.print(f"[dim]Items to copy: {items_to_copy}[/dim]")
+        
+        for item_name in items_to_copy:
+            source_item = source_dir / item_name
+            if verbose and not tracker:
+                console.print(f"[dim]Checking {source_item} - exists: {source_item.exists()}[/dim]")
             
-            with open(zip_path, 'wb') as f:
-                if total_size == 0:
-                    # No content-length header, download without progress
-                    for chunk in response.iter_bytes(chunk_size=8192):
-                        f.write(chunk)
-                else:
-                    if show_progress:
-                        # Show progress bar
-                        with Progress(
-                            SpinnerColumn(),
-                            TextColumn("[progress.description]{task.description}"),
-                            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                            console=console,
-                        ) as progress:
-                            task = progress.add_task("Downloading...", total=total_size)
-                            downloaded = 0
-                            for chunk in response.iter_bytes(chunk_size=8192):
-                                f.write(chunk)
-                                downloaded += len(chunk)
-                                progress.update(task, completed=downloaded)
+            if source_item.exists():
+                dest_item = project_path / item_name
+                
+                if verbose and not tracker:
+                    if source_item.is_dir():
+                        sub_items = list(source_item.rglob('*'))
+                        console.print(f"[cyan]Copying directory {item_name} with {len(sub_items)} items[/cyan]")
+                        # Show subdirectories specifically
+                        subdirs = [item for item in source_item.iterdir() if item.is_dir()]
+                        if subdirs:
+                            console.print(f"[dim]  Subdirectories: {[d.name for d in subdirs]}[/dim]")
                     else:
-                        # Silent download loop
-                        for chunk in response.iter_bytes(chunk_size=8192):
-                            f.write(chunk)
-    
-    except httpx.RequestError as e:
-        if verbose:
-            console.print(f"[red]Error downloading template:[/red] {e}")
-        if zip_path.exists():
-            zip_path.unlink()
-        raise typer.Exit(1)
-    if verbose:
-        console.print(f"Downloaded: {filename}")
-    metadata = {
-        "filename": filename,
-        "size": file_size,
-        "release": release_data["tag_name"],
-        "asset_url": download_url
-    }
-    return zip_path, metadata
+                        console.print(f"[cyan]Copying file {item_name}[/cyan]")
+                
+                if source_item.is_dir():
+                    if dest_item.exists():
+                        if verbose and not tracker:
+                            console.print(f"[yellow]Merging directory:[/yellow] {item_name}")
+                        # Use shutil.copytree with dirs_exist_ok=True for proper merging
+                        shutil.copytree(source_item, dest_item, dirs_exist_ok=True)
+                    else:
+                        shutil.copytree(source_item, dest_item)
+                else:
+                    if dest_item.exists() and verbose and not tracker:
+                        console.print(f"[yellow]Overwriting file:[/yellow] {item_name}")
+                    shutil.copy2(source_item, dest_item)
+                    
+                if verbose and not tracker:
+                    console.print(f"[green]✓[/green] Copied {item_name}")
+                    # Show what was copied for directories
+                    if source_item.is_dir():
+                        sub_items = list(source_item.rglob('*'))
+                        console.print(f"    [dim]Contains {len(sub_items)} items[/dim]")
+        
+        if tracker:
+            tracker.complete("extract", f"copied {len(items_to_copy)} template directories")
+        elif verbose:
+            console.print("[green]✓[/green] Local templates copied successfully")
+            
+    except Exception as e:
+        if tracker:
+            tracker.error("extract", str(e))
+        else:
+            if verbose:
+                console.print(f"[red]Error copying local templates:[/red] {e}")
+        raise
 
 
 def download_and_extract_template(project_path: Path, ai_assistant: str, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None) -> Path:
     """Download the latest release and extract it to create a new project.
     Returns project_path. Uses tracker if provided (with keys: fetch, download, extract, cleanup)
     """
+    # Find the spec-ops repository root - try multiple locations in order of preference
     current_dir = Path.cwd()
+    file_dir = Path(__file__).parent.parent.parent.resolve()
+    package_dir = Path(__file__).parent
     
-    # Step: fetch + download combined
-    if tracker:
-        tracker.start("fetch", "contacting GitHub API")
-    try:
-        zip_path, meta = download_template_from_github(
-            ai_assistant,
-            current_dir,
-            verbose=verbose and tracker is None,
-            show_progress=(tracker is None)
-        )
+    # Check locations in order of preference:
+    # 1. Current working directory (development mode)
+    # 2. Package directory (bundled templates from pyproject.toml)
+    # 3. File directory (fallback for other installations)
+    locations_to_check = [
+        (current_dir, "current working directory", lambda: (current_dir / "templates").exists() and (current_dir / "pyproject.toml").exists()),
+        (package_dir, "package resources", lambda: (package_dir / "templates").exists()),
+        (file_dir, "package directory", lambda: (file_dir / "templates").exists()),
+    ]
+    
+    local_templates_dir = None
+    location_description = None
+    
+    for location, description, check_func in locations_to_check:
+        if check_func():
+            local_templates_dir = location
+            location_description = description
+            break
+    
+    if local_templates_dir is None:
+        checked_paths = [str(loc) + "/templates" for loc, _, _ in locations_to_check]
+        error_msg = f"Could not find templates directory. Checked: {', '.join(checked_paths)}"
         if tracker:
-            tracker.complete("fetch", f"release {meta['release']} ({meta['size']:,} bytes)")
-            tracker.add("download", "Download template")
-            tracker.complete("download", meta['filename'])  # already downloaded inside helper
-    except Exception as e:
-        if tracker:
-            tracker.error("fetch", str(e))
+            tracker.error("fetch", error_msg)
         else:
-            if verbose:
-                console.print(f"[red]Error downloading template:[/red] {e}")
-        raise
+            console.print(f"[red]Error:[/red] {error_msg}")
+        raise FileNotFoundError(error_msg)
+    
+    if verbose and not tracker:
+        console.print(f"[dim]Using templates from {location_description}[/dim]")
     
     if tracker:
-        tracker.add("extract", "Extract template")
-        tracker.start("extract")
+        tracker.start("fetch", "using local templates")
+        tracker.complete("fetch", f"local directory: {local_templates_dir}")
+        tracker.add("extract", "Copy local templates")
     elif verbose:
-        console.print("Extracting template...")
+        console.print(f"[cyan]Using local templates from:[/cyan] {local_templates_dir}")
+        console.print(f"[cyan]Copying to project directory:[/cyan] {project_path}")
     
-    try:
-        # Create project directory only if not using current directory
-        if not is_current_dir:
-            project_path.mkdir(parents=True)
-        
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            # List all files in the ZIP for debugging
-            zip_contents = zip_ref.namelist()
-            if tracker:
-                tracker.start("zip-list")
-                tracker.complete("zip-list", f"{len(zip_contents)} entries")
-            elif verbose:
-                console.print(f"[cyan]ZIP contains {len(zip_contents)} items[/cyan]")
-            
-            # For current directory, extract to a temp location first
-            if is_current_dir:
-                with tempfile.TemporaryDirectory() as temp_dir:
-                    temp_path = Path(temp_dir)
-                    zip_ref.extractall(temp_path)
-                    
-                    # Check what was extracted
-                    extracted_items = list(temp_path.iterdir())
-                    if tracker:
-                        tracker.start("extracted-summary")
-                        tracker.complete("extracted-summary", f"temp {len(extracted_items)} items")
-                    elif verbose:
-                        console.print(f"[cyan]Extracted {len(extracted_items)} items to temp location[/cyan]")
-                    
-                    # Handle GitHub-style ZIP with a single root directory
-                    source_dir = temp_path
-                    if len(extracted_items) == 1 and extracted_items[0].is_dir():
-                        source_dir = extracted_items[0]
-                        if tracker:
-                            tracker.add("flatten", "Flatten nested directory")
-                            tracker.complete("flatten")
-                        elif verbose:
-                            console.print(f"[cyan]Found nested directory structure[/cyan]")
-                    
-                    # Copy contents to current directory
-                    for item in source_dir.iterdir():
-                        dest_path = project_path / item.name
-                        if item.is_dir():
-                            if dest_path.exists():
-                                if verbose and not tracker:
-                                    console.print(f"[yellow]Merging directory:[/yellow] {item.name}")
-                                # Recursively copy directory contents
-                                for sub_item in item.rglob('*'):
-                                    if sub_item.is_file():
-                                        rel_path = sub_item.relative_to(item)
-                                        dest_file = dest_path / rel_path
-                                        dest_file.parent.mkdir(parents=True, exist_ok=True)
-                                        shutil.copy2(sub_item, dest_file)
-                            else:
-                                shutil.copytree(item, dest_path)
-                        else:
-                            if dest_path.exists() and verbose and not tracker:
-                                console.print(f"[yellow]Overwriting file:[/yellow] {item.name}")
-                            shutil.copy2(item, dest_path)
-                    if verbose and not tracker:
-                        console.print(f"[cyan]Template files merged into current directory[/cyan]")
-            else:
-                # Extract directly to project directory (original behavior)
-                zip_ref.extractall(project_path)
-                
-                # Check what was extracted
-                extracted_items = list(project_path.iterdir())
-                if tracker:
-                    tracker.start("extracted-summary")
-                    tracker.complete("extracted-summary", f"{len(extracted_items)} top-level items")
-                elif verbose:
-                    console.print(f"[cyan]Extracted {len(extracted_items)} items to {project_path}:[/cyan]")
-                    for item in extracted_items:
-                        console.print(f"  - {item.name} ({'dir' if item.is_dir() else 'file'})")
-                
-                # Handle GitHub-style ZIP with a single root directory
-                if len(extracted_items) == 1 and extracted_items[0].is_dir():
-                    # Move contents up one level
-                    nested_dir = extracted_items[0]
-                    temp_move_dir = project_path.parent / f"{project_path.name}_temp"
-                    # Move the nested directory contents to temp location
-                    shutil.move(str(nested_dir), str(temp_move_dir))
-                    # Remove the now-empty project directory
-                    project_path.rmdir()
-                    # Rename temp directory to project directory
-                    shutil.move(str(temp_move_dir), str(project_path))
-                    if tracker:
-                        tracker.add("flatten", "Flatten nested directory")
-                        tracker.complete("flatten")
-                    elif verbose:
-                        console.print(f"[cyan]Flattened nested directory structure[/cyan]")
-                    
-    except Exception as e:
-        if tracker:
-            tracker.error("extract", str(e))
-        else:
-            if verbose:
-                console.print(f"[red]Error extracting template:[/red] {e}")
-        # Clean up project directory if created and not current directory
-        if not is_current_dir and project_path.exists():
-            shutil.rmtree(project_path)
-        raise typer.Exit(1)
-    else:
-        if tracker:
-            tracker.complete("extract")
-    finally:
-        if tracker:
-            tracker.add("cleanup", "Remove temporary archive")
-        # Clean up downloaded ZIP file
-        if zip_path.exists():
-            zip_path.unlink()
-            if tracker:
-                tracker.complete("cleanup")
-            elif verbose:
-                console.print(f"Cleaned up: {zip_path.name}")
-    
+    # Copy templates directly from local directory
+    copy_local_templates(local_templates_dir, project_path, is_current_dir, verbose=verbose, tracker=tracker)
     return project_path
-
-
 @app.command()
 def init(
     project_name: str = typer.Argument(None, help="Name for your new project directory (optional if using --here)"),
@@ -790,6 +658,7 @@ def init(
             tracker.complete("final", "project ready")
         except Exception as e:
             tracker.error("final", str(e))
+            console.print(f"\n[red]Error:[/red] {str(e)}")
             if not here and project_path.exists():
                 shutil.rmtree(project_path)
             raise typer.Exit(1)

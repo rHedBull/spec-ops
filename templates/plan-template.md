@@ -118,7 +118,11 @@ specs/[###-feature]/
 ├── contracts/           # Phase 1 output (/plan command)
 │   ├── api-spec.yaml   # OpenAPI/GraphQL schemas
 │   └── database-schema.sql # Database DDL and constraints
-└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+├── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+└── tasks/               # Phase 3 output (/detail command - detailed task specs)
+    ├── T001-create-project-structure.md
+    ├── T002-initialize-dependencies.md
+    └── [additional detailed task files]
 ```
 
 **CRITICAL**: You MUST create files with these EXACT names. Do NOT use old names like:
@@ -352,8 +356,9 @@ ios/ or android/
 - [ ] Phase 1: Design complete (/plan command)
 - [ ] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
-- [ ] Phase 4: Implementation complete
-- [ ] Phase 5: Validation passed
+- [ ] Phase 4: Task details created (/detail command - optional)
+- [ ] Phase 5: Implementation complete
+- [ ] Phase 6: Validation passed
 
 **Gate Status**:
 - [ ] Initial Constitution Check: PASS

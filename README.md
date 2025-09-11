@@ -58,11 +58,47 @@ Use the `/plan` command to provide your tech stack and architecture choices.
 /plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
 ```
 
-### 4. Break down and implement
+### 4. Break down into tasks
 
-Use `/tasks` to create an actionable task list, then ask your agent to implement the feature.
+Use `/tasks` to create an actionable task list organized by milestones:
+
+```bash
+/tasks
+```
+
+### 5. (Optional) Detail complex tasks  
+
+Use `/detail` to create detailed specifications for complex tasks:
+
+```bash
+/detail T005                    # Detail single task
+/detail T004-T007              # Detail range of tasks  
+/detail "Milestone 1"          # Detail all Milestone 1 tasks
+```
+
+### 6. Implement
+
+Ask your agent to implement the feature following the task breakdown.
 
 For detailed step-by-step instructions, see our [comprehensive guide](./spec-driven.md).
+
+## 🔄 Command Workflow
+
+The Spec-Driven Development process follows this command sequence:
+
+1. **`/specify`** - Create feature specification (what & why)
+2. **`/plan`** - Generate technical implementation plan (how)  
+3. **`/tasks`** - Break down into milestone-based tasks
+4. **`/detail`** *(optional)* - Create detailed specs for complex tasks
+5. **Implement** - Execute tasks following the breakdown
+
+### Task Management Features
+
+- **Central Tracking**: All task status in `tasks.md` with registry summary
+- **Milestone Organization**: Tasks grouped by deliverable milestones
+- **Selective Detailing**: Only complex tasks need detailed specifications  
+- **Status Tracking**: Track progress without detailed specs for every task
+- **Sequential Numbering**: Automatic task ID management prevents duplicates
 
 ## 📚 Core philosophy
 
@@ -77,9 +113,9 @@ Spec-Driven Development is a structured process that emphasizes:
 
 | Phase | Focus | Key Activities |
 |-------|-------|----------------|
-| **0-to-1 Development** ("Greenfield") | Generate from scratch | <ul><li>Start with high-level requirements</li><li>Generate specifications</li><li>Plan implementation steps</li><li>Build production-ready applications</li></ul> |
-| **Creative Exploration** | Parallel implementations | <ul><li>Explore diverse solutions</li><li>Support multiple technology stacks & architectures</li><li>Experiment with UX patterns</li></ul> |
-| **Iterative Enhancement** ("Brownfield") | Brownfield modernization | <ul><li>Add features iteratively</li><li>Modernize legacy systems</li><li>Adapt processes</li></ul> |
+| **0-to-1 Development** ("Greenfield") | Generate from scratch | <ul><li>Start with high-level requirements</li><li>Generate specifications</li><li>Plan implementation steps</li><li>Break down into milestone-based tasks</li><li>Detail complex tasks as needed</li><li>Build production-ready applications</li></ul> |
+| **Creative Exploration** | Parallel implementations | <ul><li>Explore diverse solutions</li><li>Support multiple technology stacks & architectures</li><li>Experiment with UX patterns</li><li>Track progress across implementations</li></ul> |
+| **Iterative Enhancement** ("Brownfield") | Brownfield modernization | <ul><li>Add features iteratively</li><li>Modernize legacy systems</li><li>Adapt processes</li><li>Maintain task continuity</li></ul> |
 
 ## 🎯 Experimental goals
 
@@ -163,7 +199,7 @@ Go to the project folder and run your AI agent. In our example, we're using `cla
 
 ![Bootstrapping Claude Code environment](./media/bootstrap-claude-code.gif)
 
-You will know that things are configured correctly if you see the `/specify`, `/plan`, and `/tasks` commands available.
+You will know that things are configured correctly if you see the `/specify`, `/plan`, `/tasks`, and `/detail` commands available.
 
 The first step should be creating a new project scaffolding. Use `/specify` command and then provide the concrete requirements for the project you want to develop.
 
@@ -262,21 +298,29 @@ The output of this step will include a number of implementation detail documents
 │	 ├── create-new-feature.sh
 │	 ├── get-feature-paths.sh
 │	 ├── setup-plan.sh
-│	 └── update-claude-md.sh
+│	 ├── update-claude-md.sh
+│	 └── update-task-status.sh
 ├── specs
 │	 └── 001-create-taskify
 │	     ├── contracts
 │	     │	 ├── api-spec.json
 │	     │	 └── signalr-spec.md
-│	     ├── data-model.md
+│	     ├── tasks
+│	     │	 ├── T008-user-model.md
+│	     │	 └── T009-user-service-crud.md
+│	     ├── architecture.md
+│	     ├── data-design.md
+│	     ├── deployment.md
 │	     ├── plan.md
 │	     ├── quickstart.md
 │	     ├── research.md
-│	     └── spec.md
+│	     ├── spec.md
+│	     └── tasks.md
 └── templates
     ├── CLAUDE-template.md
     ├── plan-template.md
     ├── spec-template.md
+    ├── task-detail-template.md
     └── tasks-template.md
 ```
 
@@ -326,7 +370,85 @@ You can also ask Claude Code (if you have the [GitHub CLI](https://docs.github.c
 >[!NOTE]
 >Before you have the agent implement it, it's also worth prompting Claude Code to cross-check the details to see if there are any over-engineered pieces (remember - it can be over-eager). If over-engineered components or decisions exist, you can ask Claude Code to resolve them. Ensure that Claude Code follows the [constitution](base/memory/constitution.md) as the foundational piece that it must adhere to when establishing the plan.
 
-### STEP 5: Implementation
+### STEP 5: Generate Tasks and Optional Detailing
+
+#### Generate Tasks
+
+Use the `/tasks` command to break down the implementation plan into actionable, milestone-based tasks:
+
+```text
+/tasks
+```
+
+This will create a `tasks.md` file in your feature directory with:
+- **Task Registry**: Central tracking with task numbering and status summary
+- **Milestone-based organization**: Tasks grouped by deliverable milestones  
+- **Status tracking**: Each task includes status, detailed flag, and assignee
+- **Parallel execution guidance**: Clear marking of tasks that can run simultaneously
+
+Your directory structure will now include:
+
+```text
+specs/001-create-taskify/
+├── tasks.md              # Task breakdown with status tracking
+├── plan.md               # Implementation plan
+├── research.md           # Technical research
+├── data-design.md        # Data models and state machines
+├── architecture.md       # System architecture
+├── deployment.md         # Deployment strategy
+├── quickstart.md         # User scenarios
+└── contracts/            # API specifications
+```
+
+#### Optional Task Detailing
+
+For complex tasks that need detailed specifications, use the `/detail` command:
+
+```text
+# Detail a single complex task
+/detail T008
+
+# Detail a range of tasks  
+/detail T004-T007
+
+# Detail all tasks in a milestone
+/detail "Milestone 1"
+
+# Detail only test tasks in a milestone
+/detail "Milestone 1 Tests"
+```
+
+This creates detailed specifications in a `tasks/` subdirectory:
+
+```text
+specs/001-create-taskify/
+├── tasks.md              # High-level task list
+└── tasks/                # Detailed task specifications  
+    ├── T008-user-model.md
+    ├── T009-user-service-crud.md
+    └── [other detailed tasks]
+```
+
+#### Task Status Management
+
+Track progress by updating task status directly in `tasks.md`:
+
+```markdown
+- [x] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.py
+  - **Status**: Completed | **Detailed**: Yes | **Assignee**: @developer
+```
+
+Or use the provided helper script:
+
+```bash
+# Update task status
+./scripts/update-task-status.sh specs/001-create-taskify T005 "In Progress" @developer
+
+# Mark task as completed
+./scripts/update-task-status.sh specs/001-create-taskify T007 Completed
+```
+
+### STEP 6: Implementation
 
 Once ready, instruct Claude Code to implement your solution (example path included):
 
