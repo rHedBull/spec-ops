@@ -481,13 +481,13 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
             break
     
     if local_templates_dir is None:
-        checked_paths = [str(loc) + "/templates" for loc, _, _ in locations_to_check]
-        error_msg = f"Could not find templates directory. Checked: {', '.join(checked_paths)}"
+        # Fallback: Download from GitHub
+        if verbose and not tracker:
+            console.print("[yellow]Local templates not found, downloading from GitHub...[/yellow]")
         if tracker:
-            tracker.error("fetch", error_msg)
-        else:
-            console.print(f"[red]Error:[/red] {error_msg}")
-        raise FileNotFoundError(error_msg)
+            tracker.start("fetch", "downloading from GitHub")
+        
+        return download_from_github(project_path, ai_assistant, is_current_dir, verbose=verbose, tracker=tracker)
     
     if verbose and not tracker:
         console.print(f"[dim]Using templates from {location_description}[/dim]")
@@ -502,6 +502,76 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
     
     # Copy templates directly from local directory
     copy_local_templates(local_templates_dir, project_path, is_current_dir, verbose=verbose, tracker=tracker)
+    return project_path
+
+
+def download_from_github(project_path: Path, ai_assistant: str, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None) -> Path:
+    """Download templates from GitHub when not found locally."""
+    github_repo = "rHedBull/spec-ops"
+    
+    if tracker:
+        tracker.start("download", "fetching release info")
+    elif verbose:
+        console.print("[cyan]Fetching latest release from GitHub...[/cyan]")
+    
+    try:
+        # Get the latest release
+        response = httpx.get(f"https://api.github.com/repos/{github_repo}/releases/latest", timeout=10, follow_redirects=True)
+        response.raise_for_status()
+        release_data = response.json()
+        
+        # Download the source code archive
+        archive_url = release_data["zipball_url"]
+        if tracker:
+            tracker.complete("download", "downloading archive")
+        elif verbose:
+            console.print(f"[cyan]Downloading archive from:[/cyan] {archive_url}")
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            zip_path = temp_path / "source.zip"
+            
+            # Download the zip file
+            with httpx.stream("GET", archive_url, timeout=60, follow_redirects=True) as response:
+                response.raise_for_status()
+                with open(zip_path, "wb") as f:
+                    for chunk in response.iter_bytes():
+                        f.write(chunk)
+            
+            # Extract the zip file
+            extract_path = temp_path / "extracted"
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_path)
+            
+            # Find the extracted directory (GitHub creates a directory with repo name and commit hash)
+            extracted_dirs = [d for d in extract_path.iterdir() if d.is_dir()]
+            if not extracted_dirs:
+                raise FileNotFoundError("No directories found in downloaded archive")
+            
+            source_dir = extracted_dirs[0]  # Should be the only directory
+            
+            if tracker:
+                tracker.complete("download", "archive extracted")
+                tracker.add("extract", "Copy templates from archive")
+            
+            # Copy templates from the extracted source
+            copy_local_templates(source_dir, project_path, is_current_dir, verbose=verbose, tracker=tracker)
+    
+    except httpx.RequestError as e:
+        error_msg = f"Failed to download from GitHub: {e}"
+        if tracker:
+            tracker.error("download", error_msg)
+        else:
+            console.print(f"[red]Error:[/red] {error_msg}")
+        raise
+    except Exception as e:
+        error_msg = f"Failed to extract templates: {e}"
+        if tracker:
+            tracker.error("extract", error_msg)
+        else:
+            console.print(f"[red]Error:[/red] {error_msg}")
+        raise
+    
     return project_path
 @app.command()
 def init(
