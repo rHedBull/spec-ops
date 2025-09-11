@@ -286,9 +286,9 @@ app = typer.Typer(
 
 def show_banner():
     """Display the ASCII art banner."""
-    # Create gradient effect with different colors
+    # Create gradient effect with different colors - orange to black
     banner_lines = BANNER.strip().split('\n')
-    colors = ["bright_blue", "blue", "cyan", "bright_cyan", "white", "bright_white"]
+    colors = ["bright_red", "red", "bright_yellow", "yellow", "bright_black", "black"]
     
     styled_banner = Text()
     for i, line in enumerate(banner_lines):
