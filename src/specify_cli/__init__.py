@@ -391,6 +391,10 @@ def copy_local_templates(source_dir: Path, project_path: Path, is_current_dir: b
     # Define which directories and files to copy
     items_to_copy = ["templates", "scripts", "memory"]
     
+    # Special handling for .claude directory - copy from templates/.claude to project root
+    claude_source = source_dir / "templates" / ".claude"
+    claude_dest = project_path / ".claude"
+    
     if tracker:
         tracker.start("extract")
     
@@ -438,8 +442,18 @@ def copy_local_templates(source_dir: Path, project_path: Path, is_current_dir: b
                         sub_items = list(source_item.rglob('*'))
                         console.print(f"    [dim]Contains {len(sub_items)} items[/dim]")
         
+        # Copy .claude directory from templates/.claude to project root
+        if claude_source.exists():
+            if verbose and not tracker:
+                console.print("[cyan]Copying Claude Code commands...[/cyan]")
+            if claude_dest.exists():
+                shutil.rmtree(claude_dest)  # Remove existing .claude directory
+            shutil.copytree(claude_source, claude_dest)
+            if verbose and not tracker:
+                console.print("[green]✓[/green] Claude Code commands copied")
+        
         if tracker:
-            tracker.complete("extract", f"copied {len(items_to_copy)} template directories")
+            tracker.complete("extract", f"copied {len(items_to_copy)} template directories + Claude commands")
         elif verbose:
             console.print("[green]✓[/green] Local templates copied successfully")
             
