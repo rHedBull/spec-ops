@@ -317,18 +317,32 @@ ios/ or android/
 
 **Task Generation Strategy**:
 - Load `/templates/tasks-template.md` as base
-- Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
+- Generate milestone-based tasks from Phase 1 design docs
+- Group tasks by logical feature boundaries (milestones)
 - Each contract → contract test task [P]
 - Each entity → model creation task [P] 
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
+**Milestone Strategy**:
+- **Small features** (1-5 endpoints): Single milestone
+- **Medium features** (6-15 endpoints): 2-3 milestones by feature groups
+- **Large features** (16+ endpoints): 3-4 milestones by user workflows
+- Each milestone delivers working, testable functionality
+
+**Branch Strategy**:
+- **Feature Branch**: `[###-feature-name]` - main development branch
+- **Milestone Branches**: `[###-feature-name]/milestone-N` - milestone-specific work
+- **Integration Branch**: `[###-feature-name]/integration` - final integration
+- Predefined branch structure created during task generation
+
 **Ordering Strategy**:
-- TDD order: Tests before implementation 
+- TDD order: Tests before implementation within each milestone
+- Milestone order: Foundation → Core features → Advanced features → Polish
 - Dependency order: Models before services before UI
 - Mark [P] for parallel execution (independent files)
 
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
+**Estimated Output**: 25-30 numbered, milestone-organized tasks with branch strategy
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 

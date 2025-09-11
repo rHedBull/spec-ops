@@ -76,6 +76,13 @@ Given the context provided as an argument, do this:
    - Update Task Registry with last task ID used
    - Provide foundation for future task additions
 
+10. Define milestone branch assignments:
+   - Assign each task to its appropriate predefined branch
+   - Document branch strategy and predefined names in tasks.md
+   - Include branch assignment in each task's metadata
+   - Ensure branch names follow convention: [###-feature-name]/milestone-N
+   - Note: Branches are created on-demand, not automatically
+
 Context for task generation: {ARGS}
 
 The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.

@@ -13,6 +13,35 @@
 - **Blocked**: 0 tasks
 - **Detailed**: 0 tasks (use `/detail` command to create detailed specs)
 
+## Branch Strategy
+**Feature Branch**: `[###-feature-name]` | **Current**: `[current-branch]`
+
+### Predefined Branch Names
+- **Setup**: `[###-feature-name]` - Project setup and planning
+- **Milestone 1**: `[###-feature-name]/milestone-1` - Core user management
+- **Milestone 2**: `[###-feature-name]/milestone-2` - Advanced features
+- **Integration**: `[###-feature-name]/integration` - Final integration and testing
+
+### Branch Creation Strategy
+- **Create branches on-demand** when starting work on that milestone
+- **Branch names are predefined** in this document for clarity
+- **Each task specifies** which branch it should be developed on
+
+### Branch Management Commands
+```bash
+# Create milestone branch when ready to start work
+./scripts/manage-milestone-branches.sh specs/[###-feature-name] create milestone-1
+
+# Switch to existing milestone branch
+./scripts/manage-milestone-branches.sh specs/[###-feature-name] switch milestone-1
+
+# Check which branch you should be on for current work
+./scripts/manage-milestone-branches.sh specs/[###-feature-name] status
+
+# List existing branches (only shows created branches)
+./scripts/manage-milestone-branches.sh specs/[###-feature-name] list
+```
+
 ## Execution Flow (main)
 ```
 1. Load plan.md from feature directory
@@ -61,87 +90,121 @@
 ## Setup Phase (Once)
 - [ ] T001 Create project structure per implementation plan
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]` (main feature branch)
 - [ ] T002 Initialize [language] project with [framework] dependencies  
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]` (main feature branch)
 - [ ] T003 [P] Configure linting and formatting tools
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]` (main feature branch)
 
 ## Milestone 1: Core User Management ⚠️
 **Scope**: Basic user operations (create, read, authenticate)
 **Deliverable**: Working user management system
+**Branch**: `[###-feature-name]/milestone-1`
 
 ### Milestone 1 Tests (TDD) ⚠️ MUST COMPLETE BEFORE IMPLEMENTATION
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 - [ ] T004 [P] Contract test POST /api/users in tests/contract/test_users_post.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T006 [P] Integration test user registration in tests/integration/test_registration.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T007 [P] Integration test auth flow in tests/integration/test_auth.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 
 ### Milestone 1 Implementation (ONLY after tests are failing)
 - [ ] T008 [P] User model in src/models/user.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T009 [P] UserService CRUD in src/services/user_service.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T010 POST /api/users endpoint in src/api/users.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T011 GET /api/users/{id} endpoint in src/api/users.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T012 Connect UserService to database
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T013 Basic auth middleware in src/middleware/auth.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 - [ ] T014 Input validation and error handling
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-1`
 
 ## Milestone 2: Advanced Features ⚠️
 **Scope**: User profiles, permissions, advanced operations
 **Deliverable**: Complete user management with profiles and permissions
+**Branch**: `[###-feature-name]/milestone-2`
 **Prerequisites**: Milestone 1 complete and tested
 
 ### Milestone 2 Tests (TDD) ⚠️ MUST COMPLETE BEFORE IMPLEMENTATION
 - [ ] T015 [P] Contract test PUT /api/users/{id} in tests/contract/test_users_put.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T016 [P] Contract test GET /api/users/{id}/profile in tests/contract/test_profiles_get.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T017 [P] Integration test profile management in tests/integration/test_profiles.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T018 [P] Integration test permissions in tests/integration/test_permissions.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 
 ### Milestone 2 Implementation (ONLY after tests are failing)
 - [ ] T019 [P] UserProfile model in src/models/user_profile.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T020 [P] PermissionService in src/services/permission_service.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T021 PUT /api/users/{id} endpoint in src/api/users.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T022 GET /api/users/{id}/profile endpoint in src/api/profiles.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T023 Profile management service integration
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 - [ ] T024 Permission-based middleware enhancement
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/milestone-2`
 
 ## Final Polish Phase
+**Branch**: `[###-feature-name]/integration`
 **Prerequisites**: All milestones complete
 - [ ] T025 [P] Unit tests for validation in tests/unit/test_validation.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T026 [P] Unit tests for services in tests/unit/test_services.py
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T027 Performance tests (<200ms response) in tests/performance/
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T028 [P] Update docs/api.md with all endpoints
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T029 Cross-milestone integration validation
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T030 Remove code duplication across milestones
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 - [ ] T031 Run complete manual-testing.md scenarios
   - **Status**: Not Started | **Detailed**: No | **Assignee**: Unassigned
+  - **Branch**: `[###-feature-name]/integration`
 
 ## Dependencies
 
