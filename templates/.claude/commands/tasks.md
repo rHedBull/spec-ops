@@ -9,11 +9,12 @@ This is the third step in the Spec-Driven Development lifecycle.
 
 Given the context provided as an argument, do this:
 
-1. Run `scripts/check-task-prerequisites.sh --json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute.
+1. Run `scripts/bash/check-task-prerequisites.sh --json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute.
 2. Load and analyze available design documents:
    - Always read plan.md for tech stack and libraries
    - IF EXISTS: Read data-design.md for entities and state machines
    - IF EXISTS: Read architecture.md for services and structure
+   - IF EXISTS: Read deployment.md for deployment strategy
    - IF EXISTS: Read contracts/ for API endpoints
    - IF EXISTS: Read research.md for technical decisions
    - IF EXISTS: Read quickstart.md for test scenarios

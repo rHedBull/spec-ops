@@ -1,3 +1,10 @@
+---
+description: "Implementation plan template for feature development"
+scripts:
+  sh: scripts/bash/update-agent-context.sh __AGENT__
+  ps: scripts/powershell/update-agent-context.ps1 -AgentType __AGENT__
+---
+
 # Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
@@ -10,18 +17,19 @@
 2. Fill Technical Context (scan for NEEDS CLARIFICATION)
    → Detect Project Type from context (web=frontend+backend, mobile=app+api)
    → Set Structure Decision based on project type
-3. Evaluate Constitution Check section below
+3. Fill the Constitution Check section based on the content of the constitution document.
+4. Evaluate Constitution Check section below
    → If violations exist: Document in Complexity Tracking
    → If no justification possible: ERROR "Simplify approach first"
    → Update Progress Tracking: Initial Constitution Check
-4. Execute Phase 0 → research.md
+5. Execute Phase 0 → research.md
    → If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
-5. Execute Phase 1 → contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, or `GEMINI.md` for Gemini CLI).
-6. Re-evaluate Constitution Check section
+6. Execute Phase 1 → contracts, architecture.md, data-design.md, deployment.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, or `GEMINI.md` for Gemini CLI).
+7. Re-evaluate Constitution Check section
    → If new violations: Refactor design, return to Phase 1
    → Update Progress Tracking: Post-Design Constitution Check
-7. Plan Phase 2 → Describe task generation approach (DO NOT create tasks.md)
-8. STOP - Ready for /tasks command
+8. Plan Phase 2 → Describe task generation approach (DO NOT create tasks.md)
+9. STOP - Ready for /tasks command
 ```
 
 **IMPORTANT**: The /plan command STOPS at step 7. Phases 2-4 are executed by other commands:
@@ -32,47 +40,49 @@
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [Default: development-friendly, or specify if performance requirements mentioned, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Security Requirements**: [Default: basic development security, or specify if security/privacy mentioned, e.g., GDPR, encryption, audit trails or NEEDS CLARIFICATION]  
+**Project Type**: [single/web/mobile - determines source structure]
+**Performance Goals**: [Default: development-friendly, or specify if performance requirements mentioned, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**Security Requirements**: [Default: basic development security, or specify if security/privacy mentioned, e.g., GDPR, encryption, audit trails or NEEDS CLARIFICATION]
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ### Tech Stack & Infrastructure
-**Backend Framework**: [e.g., FastAPI, Express.js, Spring Boot, .NET Core or NEEDS CLARIFICATION]  
-**Frontend Framework**: [e.g., React, Vue.js, Angular, Svelte, or N/A for non-web projects or NEEDS CLARIFICATION]  
-**Mobile Framework**: [e.g., React Native, Flutter, Native iOS/Android, or N/A or NEEDS CLARIFICATION]  
-**API Style**: [REST, GraphQL, gRPC, WebSocket, or NEEDS CLARIFICATION]  
-**Authentication**: [JWT, OAuth2, Session-based, Firebase Auth, or NEEDS CLARIFICATION]  
+**Backend Framework**: [e.g., FastAPI, Express.js, Spring Boot, .NET Core or NEEDS CLARIFICATION]
+**Frontend Framework**: [e.g., React, Vue.js, Angular, Svelte, or N/A for non-web projects or NEEDS CLARIFICATION]
+**Mobile Framework**: [e.g., React Native, Flutter, Native iOS/Android, or N/A or NEEDS CLARIFICATION]
+**API Style**: [REST, GraphQL, gRPC, WebSocket, or NEEDS CLARIFICATION]
+**Authentication**: [JWT, OAuth2, Session-based, Firebase Auth, or NEEDS CLARIFICATION]
 **Deployment**: [Default: local development setup, or specify if production/cloud requirements or NEEDS CLARIFICATION]
 
 ### Database & Storage
-**Primary Database**: [PostgreSQL, MySQL, MongoDB, SQLite, or NEEDS CLARIFICATION]  
-**Database Version**: [specific version requirements or NEEDS CLARIFICATION]  
-**Connection Pooling**: [built-in, pgbouncer, connection library or NEEDS CLARIFICATION]  
-**Caching Layer**: [Redis, Memcached, in-memory, or none or NEEDS CLARIFICATION]  
-**File Storage**: [local filesystem, S3, GCS, Azure Blob, or none or NEEDS CLARIFICATION]  
+**Primary Database**: [PostgreSQL, MySQL, MongoDB, SQLite, or NEEDS CLARIFICATION]
+**Database Version**: [specific version requirements or NEEDS CLARIFICATION]
+**Connection Pooling**: [built-in, pgbouncer, connection library or NEEDS CLARIFICATION]
+**Caching Layer**: [Redis, Memcached, in-memory, or none or NEEDS CLARIFICATION]
+**File Storage**: [local filesystem, S3, GCS, Azure Blob, or none or NEEDS CLARIFICATION]
 **Search Engine**: [Elasticsearch, PostgreSQL full-text, Algolia, or none or NEEDS CLARIFICATION]
 
 ### Testing Strategy
-**Unit Testing**: [pytest, Jest, JUnit, XCTest or NEEDS CLARIFICATION]  
-**Integration Testing**: [Testcontainers, database fixtures, API testing or NEEDS CLARIFICATION]  
-**E2E Testing**: [Playwright, Cypress, Selenium, or none or NEEDS CLARIFICATION]  
+**Unit Testing**: [pytest, Jest, JUnit, XCTest or NEEDS CLARIFICATION]
+**Integration Testing**: [Testcontainers, database fixtures, API testing or NEEDS CLARIFICATION]
+**E2E Testing**: [Playwright, Cypress, Selenium, or none or NEEDS CLARIFICATION]
 **Performance Testing**: [load testing tools, benchmarking approach or NEEDS CLARIFICATION]
 
 ### State Management & Object Lifecycle
-**State Machines**: [entities requiring state management, e.g., Order, User, Payment or NEEDS CLARIFICATION]  
-**State Persistence**: [how state is stored and retrieved, database fields, event sourcing or NEEDS CLARIFICATION]  
-**State Transitions**: [what triggers state changes, validation rules, business logic or NEEDS CLARIFICATION]  
-**Concurrency Control**: [optimistic/pessimistic locking, versioning, conflict resolution or NEEDS CLARIFICATION]  
-**Object Lifecycle**: [creation, initialization, active states, cleanup, destruction or NEEDS CLARIFICATION]  
-**Event Handling**: [domain events, state change notifications, event sourcing patterns or NEEDS CLARIFICATION]  
+**State Machines**: [entities requiring state management, e.g., Order, User, Payment or NEEDS CLARIFICATION]
+**State Persistence**: [how state is stored and retrieved, database fields, event sourcing or NEEDS CLARIFICATION]
+**State Transitions**: [what triggers state changes, validation rules, business logic or NEEDS CLARIFICATION]
+**Concurrency Control**: [optimistic/pessimistic locking, versioning, conflict resolution or NEEDS CLARIFICATION]
+**Object Lifecycle**: [creation, initialization, active states, cleanup, destruction or NEEDS CLARIFICATION]
+**Event Handling**: [domain events, state change notifications, event sourcing patterns or NEEDS CLARIFICATION]
 **Temporal Concerns**: [time-based state changes, scheduling, expiration, timeouts or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+
+[Gates determined based on constitution file]
 
 **Simplicity**:
 - Projects: [#] (max 3 - e.g., api, cli, tests)
@@ -127,7 +137,7 @@ specs/[###-feature]/
 
 **CRITICAL**: You MUST create files with these EXACT names. Do NOT use old names like:
 - ❌ data-model.md (OLD - DO NOT USE)
-- ❌ system-design.md (OLD - DO NOT USE)  
+- ❌ system-design.md (OLD - DO NOT USE)
 - ❌ services-architecture.md (OLD - DO NOT USE)
 - ✅ architecture.md (CORRECT)
 - ✅ data-design.md (CORRECT)
@@ -297,16 +307,16 @@ ios/ or android/
    - Include service interaction tests
 
 7. **Update agent file incrementally** (O(1) operation):
-   - Run `/scripts/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
+   - Run `scripts/bash/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
    - Update recent changes (keep last 3)
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**REQUIRED Output**: 
+**REQUIRED Output**:
 - architecture.md (NOT services-architecture.md)
-- data-design.md (NOT data-model.md) 
+- data-design.md (NOT data-model.md)
 - deployment.md (NEW FILE)
 - /contracts/*, failing tests, quickstart.md, agent-specific file
 
@@ -320,7 +330,7 @@ ios/ or android/
 - Generate milestone-based tasks from Phase 1 design docs
 - Group tasks by logical feature boundaries (milestones)
 - Each contract → contract test task [P]
-- Each entity → model creation task [P] 
+- Each entity → model creation task [P]
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
