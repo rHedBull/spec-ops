@@ -24,7 +24,7 @@ scripts:
    → Update Progress Tracking: Initial Constitution Check
 5. Execute Phase 0 → research.md
    → If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
-6. Execute Phase 1 → contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, or `GEMINI.md` for Gemini CLI).
+6. Execute Phase 1 → contracts, architecture.md, data-design.md, deployment.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, or `GEMINI.md` for Gemini CLI).
 7. Re-evaluate Constitution Check section
    → If new violations: Refactor design, return to Phase 1
    → Update Progress Tracking: Post-Design Constitution Check
@@ -42,13 +42,42 @@ scripts:
 ## Technical Context
 **Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+**Performance Goals**: [Default: development-friendly, or specify if performance requirements mentioned, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**Security Requirements**: [Default: basic development security, or specify if security/privacy mentioned, e.g., GDPR, encryption, audit trails or NEEDS CLARIFICATION]
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+
+### Tech Stack & Infrastructure
+**Backend Framework**: [e.g., FastAPI, Express.js, Spring Boot, .NET Core or NEEDS CLARIFICATION]
+**Frontend Framework**: [e.g., React, Vue.js, Angular, Svelte, or N/A for non-web projects or NEEDS CLARIFICATION]
+**Mobile Framework**: [e.g., React Native, Flutter, Native iOS/Android, or N/A or NEEDS CLARIFICATION]
+**API Style**: [REST, GraphQL, gRPC, WebSocket, or NEEDS CLARIFICATION]
+**Authentication**: [JWT, OAuth2, Session-based, Firebase Auth, or NEEDS CLARIFICATION]
+**Deployment**: [Default: local development setup, or specify if production/cloud requirements or NEEDS CLARIFICATION]
+
+### Database & Storage
+**Primary Database**: [PostgreSQL, MySQL, MongoDB, SQLite, or NEEDS CLARIFICATION]
+**Database Version**: [specific version requirements or NEEDS CLARIFICATION]
+**Connection Pooling**: [built-in, pgbouncer, connection library or NEEDS CLARIFICATION]
+**Caching Layer**: [Redis, Memcached, in-memory, or none or NEEDS CLARIFICATION]
+**File Storage**: [local filesystem, S3, GCS, Azure Blob, or none or NEEDS CLARIFICATION]
+**Search Engine**: [Elasticsearch, PostgreSQL full-text, Algolia, or none or NEEDS CLARIFICATION]
+
+### Testing Strategy
+**Unit Testing**: [pytest, Jest, JUnit, XCTest or NEEDS CLARIFICATION]
+**Integration Testing**: [Testcontainers, database fixtures, API testing or NEEDS CLARIFICATION]
+**E2E Testing**: [Playwright, Cypress, Selenium, or none or NEEDS CLARIFICATION]
+**Performance Testing**: [load testing tools, benchmarking approach or NEEDS CLARIFICATION]
+
+### State Management & Object Lifecycle
+**State Machines**: [entities requiring state management, e.g., Order, User, Payment or NEEDS CLARIFICATION]
+**State Persistence**: [how state is stored and retrieved, database fields, event sourcing or NEEDS CLARIFICATION]
+**State Transitions**: [what triggers state changes, validation rules, business logic or NEEDS CLARIFICATION]
+**Concurrency Control**: [optimistic/pessimistic locking, versioning, conflict resolution or NEEDS CLARIFICATION]
+**Object Lifecycle**: [creation, initialization, active states, cleanup, destruction or NEEDS CLARIFICATION]
+**Event Handling**: [domain events, state change notifications, event sourcing patterns or NEEDS CLARIFICATION]
+**Temporal Concerns**: [time-based state changes, scheduling, expiration, timeouts or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
@@ -87,16 +116,32 @@ scripts:
 
 ## Project Structure
 
-### Documentation (this feature)
+### MANDATORY Documentation Structure (this feature)
 ```
 specs/[###-feature]/
 ├── plan.md              # This file (/plan command output)
 ├── research.md          # Phase 0 output (/plan command)
-├── data-model.md        # Phase 1 output (/plan command)
+├── architecture.md      # Phase 1: MANDATORY - Services, structure, integration (/plan command)
+├── data-design.md       # Phase 1: MANDATORY - Models, state, persistence, lifecycle (/plan command)
+├── deployment.md        # Phase 1: MANDATORY - Deployment, security*, performance* (/plan command)
 ├── quickstart.md        # Phase 1 output (/plan command)
 ├── contracts/           # Phase 1 output (/plan command)
-└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+│   ├── api-spec.yaml   # OpenAPI/GraphQL schemas
+│   └── database-schema.sql # Database DDL and constraints
+├── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+└── tasks/               # Phase 3 output (/detail command - detailed task specs)
+    ├── T001-create-project-structure.md
+    ├── T002-initialize-dependencies.md
+    └── [additional detailed task files]
 ```
+
+**CRITICAL**: You MUST create files with these EXACT names. Do NOT use old names like:
+- ❌ data-model.md (OLD - DO NOT USE)
+- ❌ system-design.md (OLD - DO NOT USE)
+- ❌ services-architecture.md (OLD - DO NOT USE)
+- ✅ architecture.md (CORRECT)
+- ✅ data-design.md (CORRECT)
+- ✅ deployment.md (CORRECT)
 
 ### Source Code (repository root)
 ```
@@ -195,52 +240,119 @@ ios/ or android/
 ## Phase 1: Design & Contracts
 *Prerequisites: research.md complete*
 
-1. **Extract entities from feature spec** → `data-model.md`:
-   - Entity name, fields, relationships
-   - Validation rules from requirements
-   - State transitions if applicable
+1. **MANDATORY: System Architecture** → `architecture.md` (EXACT FILENAME):
+   - **Service Design**: Core services, boundaries, communication patterns
+   - **Project Structure**: Directory organization, module separation
+   - **Integration Patterns**: How services/components connect
+   - **Technology Integration**: Framework usage, dependency patterns
 
-2. **Generate API contracts** from functional requirements:
-   - For each user action → endpoint
-   - Use standard REST/GraphQL patterns
-   - Output OpenAPI/GraphQL schema to `/contracts/`
+2. **MANDATORY: Data & State Design** → `data-design.md` (EXACT FILENAME):
+   - **Database Schema**: Tables, indexes, constraints, relationships
+   - **Entity Modeling**: Core domain objects and their properties
+   - **State Machines**: Which entities have state, valid transitions, business rules
+   - **Object Lifecycle**: Creation, initialization, state changes, cleanup, destruction
+   - **Concurrency & Locking**: Version control, optimistic/pessimistic locking
+   - **Event Patterns**: State change events, domain events, event sourcing
+   - **Temporal Concerns**: Time-based state changes, expiration, scheduling
+   - **Class Design**: Interfaces, inheritance, composition for data/state management
+   - **Persistence Patterns**: How objects are saved, loaded, cached
 
-3. **Generate contract tests** from contracts:
-   - One test file per endpoint
-   - Assert request/response schemas
+3. **MANDATORY: Deployment & Operations** → `deployment.md` (EXACT FILENAME):
+   - **Default Strategy**: Simple local development setup
+     * Local database (SQLite, local PostgreSQL, etc.)
+     * Direct application execution (no containers by default)
+     * File-based configuration
+     * Development-friendly defaults
+   - **Conditional Sections** (only if explicitly mentioned in requirements):
+     * **Security & Privacy** (if security/privacy requirements specified):
+       - Authentication and authorization strategies
+       - Data encryption and protection
+       - Privacy compliance (GDPR, CCPA, etc.)
+       - Security headers and protections
+       - Audit logging and monitoring
+     * **Performance & Scaling** (if performance requirements specified):
+       - Load balancing and scaling strategies
+       - Caching layers and optimization
+       - Database performance tuning
+       - Monitoring and alerting
+       - Performance testing approaches
+     * **Production Deployment** (if production requirements specified):
+       - Container/cloud deployment strategies
+       - Infrastructure as code
+       - CI/CD pipeline design
+       - Environment management
+       - Backup and disaster recovery
+
+4. **API Contracts Design** → `/contracts/`:
+   - For each user action → endpoint specification
+   - Define request/response schemas with validation rules
+   - **State-Related APIs**:
+     * Design state query endpoints (current state, history)
+     * Define state transition endpoints with validation
+     * Plan bulk state operation APIs if needed
+     * Design state event subscription APIs
+   - Plan API versioning strategy and backward compatibility
+   - Design authentication and authorization per endpoint
+   - Output OpenAPI/GraphQL schema files
+
+5. **Generate contract tests** from contracts:
+   - One test file per endpoint/service interface
+   - Assert request/response schemas and business rules
    - Tests must fail (no implementation yet)
+   - Include database integration test scaffolding
 
-4. **Extract test scenarios** from user stories:
+6. **Extract test scenarios** from user stories:
    - Each story → integration test scenario
    - Quickstart test = story validation steps
+   - Include service interaction tests
 
-5. **Update agent file incrementally** (O(1) operation):
-   - Run `{SCRIPT}` for your AI assistant
+7. **Update agent file incrementally** (O(1) operation):
+   - Run `scripts/bash/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
    - Update recent changes (keep last 3)
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: data-model.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**REQUIRED Output**:
+- architecture.md (NOT services-architecture.md)
+- data-design.md (NOT data-model.md)
+- deployment.md (NEW FILE)
+- /contracts/*, failing tests, quickstart.md, agent-specific file
+
+**IMPORTANT**: You MUST create these exact filenames. Do not use old naming like data-model.md or system-design.md.
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
 
 **Task Generation Strategy**:
-- Load `.specify/templates/tasks-template.md` as base
-- Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
+- Load `/templates/tasks-template.md` as base
+- Generate milestone-based tasks from Phase 1 design docs
+- Group tasks by logical feature boundaries (milestones)
 - Each contract → contract test task [P]
 - Each entity → model creation task [P]
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
+**Milestone Strategy**:
+- **Small features** (1-5 endpoints): Single milestone
+- **Medium features** (6-15 endpoints): 2-3 milestones by feature groups
+- **Large features** (16+ endpoints): 3-4 milestones by user workflows
+- Each milestone delivers working, testable functionality
+
+**Branch Strategy**:
+- **Feature Branch**: `[###-feature-name]` - main development branch
+- **Milestone Branches**: `[###-feature-name]/milestone-N` - milestone-specific work
+- **Integration Branch**: `[###-feature-name]/integration` - final integration
+- Predefined branch structure created during task generation
+
 **Ordering Strategy**:
-- TDD order: Tests before implementation
+- TDD order: Tests before implementation within each milestone
+- Milestone order: Foundation → Core features → Advanced features → Polish
 - Dependency order: Models before services before UI
 - Mark [P] for parallel execution (independent files)
 
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
+**Estimated Output**: 25-30 numbered, milestone-organized tasks with branch strategy
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
