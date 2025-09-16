@@ -40,50 +40,20 @@ scripts:
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+**Project Type**: [single/web/mobile - determines source structure]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 [Gates determined based on constitution file]
-
-**Simplicity**:
-- Projects: [#] (max 3 - e.g., api, cli, tests)
-- Using framework directly? (no wrapper classes)
-- Single data model? (no DTOs unless serialization differs)
-- Avoiding patterns? (no Repository/UoW without proven need)
-
-**Architecture**:
-- EVERY feature as library? (no direct app code)
-- Libraries listed: [name + purpose for each]
-- CLI per library: [commands with --help/--version/--format]
-- Library docs: llms.txt format planned?
-
-**Testing (NON-NEGOTIABLE)**:
-- RED-GREEN-Refactor cycle enforced? (test MUST fail first)
-- Git commits show tests before implementation?
-- Order: Contract→Integration→E2E→Unit strictly followed?
-- Real dependencies used? (actual DBs, not mocks)
-- Integration tests for: new libraries, contract changes, shared schemas?
-- FORBIDDEN: Implementation before test, skipping RED phase
-
-**Observability**:
-- Structured logging included?
-- Frontend logs → backend? (unified stream)
-- Error context sufficient?
-
-**Versioning**:
-- Version number assigned? (MAJOR.MINOR.BUILD)
-- BUILD increments on every change?
-- Breaking changes handled? (parallel tests, migration plan)
 
 ## Project Structure
 
@@ -140,9 +110,8 @@ ios/ or android/
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
    - For each NEEDS CLARIFICATION → research task
-   - For each technology choice → best practices and integration patterns
-   - For database selection → performance, scaling, and migration considerations
-   - For service architecture → communication patterns and deployment strategies
+   - For each dependency → best practices task
+   - For each integration → patterns task
 
 2. **Generate and dispatch research agents**:
    ```
@@ -150,47 +119,14 @@ ios/ or android/
      Task: "Research {unknown} for {feature context}"
    For each technology choice:
      Task: "Find best practices for {tech} in {domain}"
-   For service architecture decisions:
-     Task: "Research service communication patterns for {use case}"
-   For database decisions:
-     Task: "Evaluate {database} for {data patterns} and {scale requirements}"
-   For interface design:
-     Task: "Research design patterns for {specific domain/problem}"
    ```
 
-3. **Service Architecture Research**:
-   - Identify service boundaries based on business capabilities
-   - Research microservice vs monolith trade-offs for this project
-   - Evaluate service communication patterns (sync vs async)
-   - Research deployment and orchestration requirements
-
-4. **Database & Storage Research**:
-   - Evaluate database options against data patterns and scale
-   - Research schema migration strategies for chosen database
-   - Investigate caching and performance optimization patterns
-   - Plan backup, recovery, and monitoring approaches
-
-5. **Class Design & Patterns Research**:
-   - Research applicable design patterns for identified problems
-   - Evaluate inheritance vs composition trade-offs
-   - Plan dependency injection and testing strategies
-   - Research error handling and exception design patterns
-
-6. **State Management & Lifecycle Research**:
-   - Identify entities requiring state machines from functional requirements
-   - Research state machine patterns for identified entities
-   - Evaluate object lifecycle management strategies
-   - Investigate concurrency control and locking mechanisms
-   - Research event-driven architecture patterns if applicable
-   - Plan temporal state management (timeouts, scheduling, expiration)
-
-7. **Consolidate findings** in `research.md` using format:
+3. **Consolidate findings** in `research.md` using format:
    - Decision: [what was chosen]
    - Rationale: [why chosen]
    - Alternatives considered: [what else evaluated]
-   - Implementation considerations: [key technical details]
 
-**Output**: research.md with all NEEDS CLARIFICATION resolved and technical foundation established
+**Output**: research.md with all NEEDS CLARIFICATION resolved
 
 ## Phase 1: Design & Contracts
 *Prerequisites: research.md complete*
@@ -231,12 +167,12 @@ ios/ or android/
 - Load `.specify/templates/tasks-template.md` as base
 - Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
 - Each contract → contract test task [P]
-- Each entity → model creation task [P]
+- Each entity → model creation task [P] 
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
 **Ordering Strategy**:
-- TDD order: Tests before implementation
+- TDD order: Tests before implementation 
 - Dependency order: Models before services before UI
 - Mark [P] for parallel execution (independent files)
 
@@ -268,9 +204,8 @@ ios/ or android/
 - [ ] Phase 1: Design complete (/plan command)
 - [ ] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
-- [ ] Phase 4: Task details created (/detail command - optional)
-- [ ] Phase 5: Implementation complete
-- [ ] Phase 6: Validation passed
+- [ ] Phase 4: Implementation complete
+- [ ] Phase 5: Validation passed
 
 **Gate Status**:
 - [ ] Initial Constitution Check: PASS
